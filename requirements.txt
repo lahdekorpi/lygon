@@ -1,0 +1,4 @@
+# Build dependencies for the Lygon font family
+fonttools>=4.40.0
+brotli>=1.0.9
+pillow>=10.0.0

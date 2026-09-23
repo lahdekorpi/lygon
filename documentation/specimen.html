@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Interactive specimen for Lygon, a modern variable typeface family based on Sansation.">
+  <title>Lygon Variable Typeface Specimen</title>
+  <style>
+    /*
+     * Lygon Variable Typeface Specimen Stylesheet
+     * Designed with high contrast, semantic structure, and full keyboard accessibility.
+     */
+
+    /* CSS Custom Properties for Theming and Typography */
+    :root {
+      color-scheme: light dark;
+      --bg-color: #f8f9fa;
+      --surface-color: #ffffff;
+      --surface-alt: #f1f3f5;
+      --border-color: #ced4da;
+      --border-focus: #0b63ce;
+      --text-main: #1a1e21;
+      --text-muted: #495057;
+      --accent: #0b63ce;
+      --accent-hover: #084999;
+      --accent-active: #05326b;
+      --accent-contrast: #ffffff;
+      --tag-bg: #e7f1ff;
+      --tag-text: #084999;
+      --diff-lygon: #0b63ce;
+      --diff-sansation: #d63384;
+      --focus-ring: 0 0 0 3px rgba(11, 99, 206, 0.4);
+      --font-ui: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-color: #0f1216;
+        --surface-color: #171b21;
+        --surface-alt: #1f242c;
+        --border-color: #343a46;
+        --border-focus: #4dabf7;
+        --text-main: #f1f3f5;
+        --text-muted: #adb5bd;
+        --accent: #339af0;
+        --accent-hover: #4dabf7;
+        --accent-active: #74c0fc;
+        --accent-contrast: #0b1526;
+        --tag-bg: #18283b;
+        --tag-text: #74c0fc;
+        --diff-lygon: #4dabf7;
+        --diff-sansation: #f06595;
+        --focus-ring: 0 0 0 3px rgba(51, 154, 240, 0.45);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
+        --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+      }
+    }
+
+    /* Font Face Declarations: Variable Lygon */
+    @font-face {
+      font-family: 'Lygon';
+      src: url('../fonts/woff2/Lygon[wght].woff2') format('woff2 supports variations'),
+           url('../fonts/woff2/Lygon[wght].woff2') format('woff2-variations'),
+           url('../fonts/woff2/Lygon[wght].woff2') format('woff2'),
+           url('../fonts/variable/Lygon[wght].ttf') format('truetype');
+      font-weight: 300 700;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'Lygon';
+      src: url('../fonts/woff2/Lygon-Italic[wght].woff2') format('woff2 supports variations'),
+           url('../fonts/woff2/Lygon-Italic[wght].woff2') format('woff2-variations'),
+           url('../fonts/woff2/Lygon-Italic[wght].woff2') format('woff2'),
+           url('../fonts/variable/Lygon-Italic[wght].ttf') format('truetype');
+      font-weight: 300 700;
+      font-style: italic;
+      font-display: swap;
+    }
+
+    /* Font Face Declarations: Original Sansation (For Direct Comparison) */
+    @font-face {
+      font-family: 'Sansation';
+      src: url('../sources/Sansation-Light.ttf') format('truetype');
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Sansation';
+      src: url('../sources/Sansation-Regular.ttf') format('truetype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Sansation';
+      src: url('../sources/Sansation-Bold.ttf') format('truetype');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Sansation';
+      src: url('../sources/Sansation-LightItalic.ttf') format('truetype');
+      font-weight: 300;
+      font-style: italic;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Sansation';
+      src: url('../sources/Sansation-Italic.ttf') format('truetype');
+      font-weight: 400;
+      font-style: italic;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Sansation';
+      src: url('../sources/Sansation-BoldItalic.ttf') format('truetype');
+      font-weight: 700;
+      font-style: italic;
+      font-display: swap;
+    }
+
+    /* Base Reset and Typography */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: var(--font-ui);
+      line-height: 1.5;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: 5rem;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    a:hover {
+      color: var(--accent-hover);
+    }
+    a:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+      border-radius: var(--radius-sm);
+    }
+
+    /* Header Region */
+    header.specimen-header {
+      background-color: var(--surface-color);
+      border-bottom: 1px solid var(--border-color);
+      padding: 2rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .header-content {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .brand-title {
+      font-family: 'Lygon', var(--font-ui);
+      font-weight: 700;
+      font-size: 2.5rem;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--text-main);
+    }
+    .brand-desc {
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-top: 0.35rem;
+      max-width: 60ch;
+    }
+    .meta-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      background-color: var(--tag-bg);
+      color: var(--tag-text);
+      border: 1px solid var(--border-color);
+    }
+
+    /* Skip Navigation Link for Screen Readers */
+    .skip-link {
+      position: absolute;
+      top: -3rem;
+      left: 1rem;
+      background: var(--accent);
+      color: var(--accent-contrast);
+      padding: 0.5rem 1rem;
+      z-index: 1000;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: var(--radius-sm);
+      transition: top 0.15s ease;
+    }
+    .skip-link:focus {
+      top: 1rem;
+    }
+
+    /* Sticky Control Toolbar */
+    .controls-panel {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: var(--surface-color);
+      border-bottom: 2px solid var(--border-color);
+      box-shadow: var(--shadow-md);
+      padding: 1rem 1.5rem;
+    }
+    .controls-wrapper {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+      align-items: end;
+    }
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .control-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .control-label output {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    input[type="range"] {
+      flex: 1;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--border-color);
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+    input[type="range"]:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+    }
+
+    /* Preset Buttons Row */
+    .preset-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+    .btn-preset {
+      background-color: var(--surface-alt);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 0.2rem 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: var(--font-ui);
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+    .btn-preset:hover {
+      background-color: var(--tag-bg);
+      border-color: var(--accent);
+    }
+    .btn-preset:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+    }
+    .btn-preset.active {
+      background-color: var(--accent);
+      color: var(--accent-contrast);
+      border-color: var(--accent);
+    }
+
+    /* Segmented Controls (Font family toggle & style toggle) */
+    .segmented-control {
+      display: inline-flex;
+      background-color: var(--surface-alt);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 3px;
+      gap: 3px;
+    }
+    .segmented-option {
+      flex: 1;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-align: center;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+    .segmented-option:hover {
+      color: var(--text-main);
+    }
+    .segmented-option:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+    }
+    .segmented-option.active {
+      background-color: var(--surface-color);
+      color: var(--accent);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color);
+    }
+
+    /* Feature Checkboxes Row */
+    .features-panel {
+      grid-column: 1 / -1;
+      padding-top: 0.75rem;
+      border-top: 1px dashed var(--border-color);
+    }
+    .features-fieldset {
+      border: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+    .features-legend {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-right: 0.5rem;
+    }
+    .checkbox-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      user-select: none;
+      color: var(--text-main);
+    }
+    .checkbox-label input[type="checkbox"] {
+      width: 1rem;
+      height: 1rem;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+    .checkbox-label input[type="checkbox"]:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+    }
+
+    /* Main Container */
+    main.specimen-content {
+      max-width: 1280px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+
+    /* Section Component Styles */
+    section.specimen-section {
+      background-color: var(--surface-color);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .section-header {
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+    }
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .section-subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+      max-width: 80ch;
+    }
+
+    /* Dynamic Target Text Styling (Controlled by Toolbar) */
+    .preview-text {
+      font-family: var(--specimen-family, 'Lygon');
+      font-weight: var(--specimen-weight, 400);
+      font-style: var(--specimen-style, normal);
+      font-size: var(--specimen-size, 2rem);
+      line-height: 1.25;
+      color: var(--text-main);
+      font-feature-settings: var(--specimen-features, "kern" 1, "liga" 1);
+      transition: font-weight 0.05s ease-out;
+      overflow-wrap: break-word;
+    }
+
+    /* Section 1: Hero Stage */
+    .hero-stage {
+      padding: 2.5rem 2rem;
+      background: linear-gradient(180deg, var(--surface-color) 0%, var(--surface-alt) 100%);
+      border-radius: var(--radius-md);
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border-color);
+    }
+    .hero-lead {
+      font-size: 3.5rem;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.015em;
+      outline: none;
+    }
+    .hero-lead:focus-visible {
+      box-shadow: var(--focus-ring);
+      border-radius: var(--radius-sm);
+    }
+    .hero-sub {
+      margin-top: 1.5rem;
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      outline: none;
+    }
+
+    /* Section 2: Glyph Refinement Cards (Comparison) */
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+    .glyph-card {
+      background-color: var(--surface-alt);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .glyph-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    .glyph-card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .glyph-card-tag {
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+    }
+    .glyph-render-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      align-items: center;
+      background-color: var(--surface-color);
+      padding: 1rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+    }
+    .glyph-sample {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 130px;
+    }
+    .sample-char {
+      font-size: 5.5rem;
+      line-height: 1;
+    }
+    .sample-char.lygon {
+      font-family: 'Lygon', sans-serif;
+      color: var(--diff-lygon);
+    }
+    .sample-char.sansation {
+      font-family: 'Sansation', sans-serif;
+      color: var(--diff-sansation);
+    }
+    .sample-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+      font-family: var(--font-mono);
+    }
+    .sample-label.lygon { color: var(--diff-lygon); }
+    .sample-label.sansation { color: var(--diff-sansation); }
+
+    .glyph-description {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+    .metric-badge {
+      display: inline-block;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* Section 3: Variable Weight Waterfall */
+    .waterfall-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .waterfall-row {
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 0;
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    .waterfall-meta {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .waterfall-meta strong {
+      display: block;
+      color: var(--text-main);
+      font-size: 0.95rem;
+    }
+    .waterfall-text {
+      font-family: var(--specimen-family, 'Lygon');
+      font-style: var(--specimen-style, normal);
+      color: var(--text-main);
+      overflow-wrap: anywhere;
+    }
+
+    /* Section 4: OpenType Features Showcase */
+    .feature-showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 1.5rem;
+    }
+    .feature-box {
+      background-color: var(--surface-alt);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .feature-box-title {
+      font-size: 1rem;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .feature-tag {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      background: var(--surface-color);
+      border: 1px solid var(--border-color);
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      color: var(--accent);
+    }
+    .feature-demo {
+      background-color: var(--surface-color);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      font-family: var(--specimen-family, 'Lygon');
+      font-size: 1.6rem;
+      color: var(--text-main);
+    }
+    .feature-subtext {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Section 5: Type Tester Playground */
+    .tester-area {
+      width: 100%;
+      min-height: 180px;
+      padding: 1.25rem;
+      background-color: var(--surface-alt);
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-main);
+      font-family: var(--specimen-family, 'Lygon');
+      font-weight: var(--specimen-weight, 400);
+      font-style: var(--specimen-style, normal);
+      font-size: var(--specimen-size, 2rem);
+      line-height: 1.35;
+      font-feature-settings: var(--specimen-features, "kern" 1, "liga" 1);
+      resize: vertical;
+      outline: none;
+    }
+    .tester-area:focus {
+      border-color: var(--border-focus);
+      box-shadow: var(--focus-ring);
+    }
+
+    /* Section 6: Character Set Matrix */
+    .charset-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+      gap: 6px;
+      margin-top: 1rem;
+    }
+    .char-cell {
+      background: var(--surface-alt);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--specimen-family, 'Lygon');
+      font-size: 1.25rem;
+      color: var(--text-main);
+      cursor: default;
+      transition: background-color 0.1s ease, transform 0.1s ease;
+    }
+    .char-cell:hover {
+      background-color: var(--tag-bg);
+      border-color: var(--accent);
+      transform: scale(1.15);
+      z-index: 2;
+    }
+
+    /* Section 7: Technical Metrics Table */
+    .metrics-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      margin-top: 1rem;
+    }
+    .metrics-table th, .metrics-table td {
+      border: 1px solid var(--border-color);
+      padding: 0.65rem 1rem;
+      text-align: left;
+    }
+    .metrics-table th {
+      background-color: var(--surface-alt);
+      font-weight: 600;
+    }
+    .metrics-table td {
+      background-color: var(--surface-color);
+      font-family: var(--font-mono);
+    }
+
+    /* Footer */
+    footer.specimen-footer {
+      max-width: 1280px;
+      margin: 3rem auto 0;
+      padding: 2rem 1.5rem 0;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+    .footer-license {
+      max-width: 80ch;
+    }
+
+    /* Screen Reader Only Utility */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* High-contrast and reduced motion media queries */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition-duration: 0.001ms !important;
+        animation-duration: 0.001ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Accessible Skip Navigation -->
+  <a href="#main-content" class="skip-link">Skip to main specimen content</a>
+
+  <!-- Header -->
+  <header class="specimen-header" role="banner">
+    <div class="header-content">
+      <div>
+        <h1 class="brand-title">Lygon</h1>
+        <p class="brand-desc">
+          A modernized, precision-crafted variable typeface family derived from Sansation by Bernd Montag.
+          Features normalized cutouts, uniform stroke geometry, complete descender curves, and comprehensive OpenType support.
+        </p>
+      </div>
+      <div class="meta-badges" aria-label="Font specifications">
+        <span class="badge">Variable Font (300 to 700)</span>
+        <span class="badge">TrueType / WOFF2</span>
+        <span class="badge">GPOS Kerning</span>
+        <span class="badge">SIL Open Font License 1.1</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sticky Interactive Controls Toolbar -->
+  <aside class="controls-panel" aria-label="Interactive specimen controls">
+    <div class="controls-wrapper">
+
+      <!-- Font Family Selector (Comparison mode) -->
+      <div class="control-group">
+        <span class="control-label" id="family-label">Font Family</span>
+        <div class="segmented-control" role="radiogroup" aria-labelledby="family-label">
+          <button type="button" class="segmented-option active" id="btn-font-lygon" role="radio" aria-checked="true" data-family="Lygon">
+            Lygon (Refined)
+          </button>
+          <button type="button" class="segmented-option" id="btn-font-sansation" role="radio" aria-checked="false" data-family="Sansation">
+            Sansation (Original)
+          </button>
+        </div>
+      </div>
+
+      <!-- Variable Weight Slider -->
+      <div class="control-group">
+        <label for="weight-slider" class="control-label">
+          <span>Optical Weight</span>
+          <output id="weight-display" for="weight-slider">400 (Regular)</output>
+        </label>
+        <div class="slider-row">
+          <input type="range" id="weight-slider" min="300" max="700" step="1" value="400" aria-valuemin="300" aria-valuemax="700" aria-valuenow="400">
+        </div>
+        <div class="preset-buttons" role="group" aria-label="Named weight presets">
+          <button type="button" class="btn-preset" data-weight="300">Light (300)</button>
+          <button type="button" class="btn-preset active" data-weight="400">Regular (400)</button>
+          <button type="button" class="btn-preset" data-weight="500">Medium (500)</button>
+          <button type="button" class="btn-preset" data-weight="600">SemiBold (600)</button>
+          <button type="button" class="btn-preset" data-weight="700">Bold (700)</button>
+        </div>
+      </div>
+
+      <!-- Slant / Style Toggle -->
+      <div class="control-group">
+        <span class="control-label" id="slant-label">Slant / Posture</span>
+        <div class="segmented-control" role="radiogroup" aria-labelledby="slant-label">
+          <button type="button" class="segmented-option active" id="btn-style-upright" role="radio" aria-checked="true" data-style="normal">
+            Upright
+          </button>
+          <button type="button" class="segmented-option" id="btn-style-italic" role="radio" aria-checked="false" data-style="italic">
+            Italic
+          </button>
+        </div>
+      </div>
+
+      <!-- Font Size Slider -->
+      <div class="control-group">
+        <label for="size-slider" class="control-label">
+          <span>Type Size</span>
+          <output id="size-display" for="size-slider">48px</output>
+        </label>
+        <div class="slider-row">
+          <input type="range" id="size-slider" min="14" max="96" step="1" value="48" aria-valuemin="14" aria-valuemax="96" aria-valuenow="48">
+        </div>
+      </div>
+
+      <!-- OpenType Feature Checkboxes -->
+      <div class="features-panel">
+        <fieldset class="features-fieldset">
+          <legend class="features-legend">OpenType Features:</legend>
+          <label class="checkbox-label">
+            <input type="checkbox" id="feat-kern" data-feature="kern" checked>
+            <span>Kerning (kern)</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="feat-liga" data-feature="liga" checked>
+            <span>Standard Ligatures (liga)</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="feat-dlig" data-feature="dlig">
+            <span>Discretionary Ligatures (dlig)</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="feat-ss01" data-feature="ss01">
+            <span>Alternate g (ss01)</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="feat-ss02" data-feature="ss02">
+            <span>Disconnected k (ss02)</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="feat-ss03" data-feature="ss03">
+            <span>Capital Eszett ẞ (ss03)</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="feat-onum" data-feature="onum">
+            <span>Oldstyle Figures (onum)</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="feat-frac" data-feature="frac">
+            <span>Fractions (frac)</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="feat-case" data-feature="case">
+            <span>Case Forms (case)</span>
+          </label>
+        </fieldset>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- Live Announcer Region for Screen Readers -->
+  <div id="a11y-announcer" class="sr-only" role="status" aria-live="polite"></div>
+
+  <!-- Main Specimen Content -->
+  <main id="main-content" class="specimen-content" role="main">
+
+    <!-- Section 1: Hero Showcase -->
+    <section class="specimen-section" aria-labelledby="section-hero-title">
+      <div class="section-header">
+        <h2 id="section-hero-title" class="section-title">Typeface In Action</h2>
+        <p class="section-subtitle">
+          Headline and introductory paragraph rendering. Click any text below to edit live and test custom phrases.
+        </p>
+      </div>
+      <div class="hero-stage">
+        <div class="preview-text hero-lead" contenteditable="true" spellcheck="false" aria-label="Editable display headline">
+          Lygon combines architectural clarity with modern digital versatility.
+        </div>
+        <div class="preview-text hero-sub" contenteditable="true" spellcheck="false" aria-label="Editable display subtext">
+          Precision-cut counters, harmonized letter gaps, and complete geometric descenders.
+        </div>
+      </div>
+      <div class="preview-text" style="font-size: 1.25rem; max-width: 75ch; margin-top: 1rem;" contenteditable="true" spellcheck="false">
+        The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs.
+        Woven silk pyjamas exchanged for blue quartz. Sphynx of black quartz, judge my vow.
+      </div>
+    </section>
+
+    <!-- Section 2: Glyph Refinements & Direct Visual Comparison -->
+    <section class="specimen-section" aria-labelledby="section-refinements-title">
+      <div class="section-header">
+        <h2 id="section-refinements-title" class="section-title">Geometric Quirks Fixed: Before &amp; After</h2>
+        <p class="section-subtitle">
+          Side-by-side analysis of key letters where cutouts were halved to match letter A, uniform stroke widths were enforced, and lowercase j received a full swept curve.
+        </p>
+      </div>
+
+      <div class="comparison-grid">
+
+        <!-- Reference Letter A -->
+        <article class="glyph-card" aria-labelledby="card-a-title">
+          <div class="glyph-card-header">
+            <h3 id="card-a-title" class="glyph-card-title">Letter A (Proportion Benchmark)</h3>
+            <span class="glyph-card-tag">Proportion Anchor</span>
+          </div>
+          <div class="glyph-render-row">
+            <div class="glyph-sample">
+              <span class="sample-char lygon">A</span>
+              <span class="sample-label lygon">Lygon Benchmark</span>
+            </div>
+            <div class="glyph-sample">
+              <span class="sample-char sansation">A</span>
+              <span class="sample-label sansation">Original Sansation</span>
+            </div>
+          </div>
+          <p class="glyph-description">
+            The letter A served as the visual benchmark. Its natural internal empty space is approximately 95 to 110 font units. All letter cutouts were brought into harmony with this reference.
+          </p>
+        </article>
+
+        <!-- Letter B -->
+        <article class="glyph-card" aria-labelledby="card-b-title">
+          <div class="glyph-card-header">
+            <h3 id="card-b-title" class="glyph-card-title">Letter B (Cutout Halved)</h3>
+            <span class="glyph-card-tag">Gap: 105u vs 218u</span>
+          </div>
+          <div class="glyph-render-row">
+            <div class="glyph-sample">
+              <span class="sample-char lygon">B</span>
+              <span class="sample-label lygon">Lygon Refined</span>
+            </div>
+            <div class="glyph-sample">
+              <span class="sample-char sansation">B</span>
+              <span class="sample-label sansation">Original Sansation</span>
+            </div>
+          </div>
+          <p class="glyph-description">
+            The original cutout between the stem and middle junction was 218 units wide, leaving excessive empty space. Lygon brings the junction closer (105 units) while preserving the natural outer bowl curvature.
+          </p>
+        </article>
+
+        <!-- Letter K -->
+        <article class="glyph-card" aria-labelledby="card-k-title">
+          <div class="glyph-card-header">
+            <h3 id="card-k-title" class="glyph-card-title">Letter K (Uniform Arm Thickness)</h3>
+            <span class="glyph-card-tag">Zero Wedges</span>
+          </div>
+          <div class="glyph-render-row">
+            <div class="glyph-sample">
+              <span class="sample-char lygon">K</span>
+              <span class="sample-label lygon">Lygon Refined</span>
+            </div>
+            <div class="glyph-sample">
+              <span class="sample-char sansation">K</span>
+              <span class="sample-label sansation">Original Sansation</span>
+            </div>
+          </div>
+          <p class="glyph-description">
+            The inner apex was translated toward the stem while simultaneously translating the outer junction by the exact same distance. This ensures both diagonal arms maintain an exact, uniform 182-unit stroke thickness without any wedge skew.
+          </p>
+        </article>
+
+        <!-- Letter P -->
+        <article class="glyph-card" aria-labelledby="card-p-title">
+          <div class="glyph-card-header">
+            <h3 id="card-p-title" class="glyph-card-title">Letter P (Bowl Cutout Harmonized)</h3>
+            <span class="glyph-card-tag">Gap: 100u vs 205u</span>
+          </div>
+          <div class="glyph-render-row">
+            <div class="glyph-sample">
+              <span class="sample-char lygon">P</span>
+              <span class="sample-label lygon">Lygon Refined</span>
+            </div>
+            <div class="glyph-sample">
+              <span class="sample-char sansation">P</span>
+              <span class="sample-label sansation">Original Sansation</span>
+            </div>
+          </div>
+          <p class="glyph-description">
+            The lower bowl stroke previously terminated 205 units away from the vertical stem. Lygon shifts this closure point closer (100 units) along its curvature, matching the proportion of letter A.
+          </p>
+        </article>
+
+        <!-- Letter R -->
+        <article class="glyph-card" aria-labelledby="card-r-title">
+          <div class="glyph-card-header">
+            <h3 id="card-r-title" class="glyph-card-title">Letter R (Uniform Diagonal Leg)</h3>
+            <span class="glyph-card-tag">Zero Wedges</span>
+          </div>
+          <div class="glyph-render-row">
+            <div class="glyph-sample">
+              <span class="sample-char lygon">R</span>
+              <span class="sample-label lygon">Lygon Refined</span>
+            </div>
+            <div class="glyph-sample">
+              <span class="sample-char sansation">R</span>
+              <span class="sample-label sansation">Original Sansation</span>
+            </div>
+          </div>
+          <p class="glyph-description">
+            The diagonal leg in Sansation formed a severe wedge when inner points alone were moved. Lygon moves both the inner leg apex and outer bowl intersection together, guaranteeing a constant 244-unit stripe from top to bottom.
+          </p>
+        </article>
+
+        <!-- Letter k (lowercase) -->
+        <article class="glyph-card" aria-labelledby="card-lc-k-title">
+          <div class="glyph-card-header">
+            <h3 id="card-lc-k-title" class="glyph-card-title">Letter k (Straight-Arm Redesign)</h3>
+            <span class="glyph-card-tag">Modern Straight Arms</span>
+          </div>
+          <div class="glyph-render-row">
+            <div class="glyph-sample">
+              <span class="sample-char lygon">k</span>
+              <span class="sample-label lygon">Lygon Refined</span>
+            </div>
+            <div class="glyph-sample">
+              <span class="sample-char sansation">k</span>
+              <span class="sample-label sansation">Original Sansation</span>
+            </div>
+          </div>
+          <p class="glyph-description">
+            Replaces Sansation's arched loop with a clean, contemporary straight-arm construction matching capital K. Diagonal arms span from x-height (1050) to baseline (0), with a normalized ~90-unit cutout gap and uniform stroke thickness.
+          </p>
+        </article>
+
+        <!-- Letter j (lowercase descender) -->
+        <article class="glyph-card" aria-labelledby="card-j-title">
+          <div class="glyph-card-header">
+            <h3 id="card-j-title" class="glyph-card-title">Letter j (User Curve Refinement)</h3>
+            <span class="glyph-card-tag">Round Sweep Refined</span>
+          </div>
+          <div class="glyph-render-row">
+            <div class="glyph-sample">
+              <span class="sample-char lygon">j</span>
+              <span class="sample-label lygon">Lygon Refined</span>
+            </div>
+            <div class="glyph-sample">
+              <span class="sample-char sansation">j</span>
+              <span class="sample-label sansation">Original Sansation</span>
+            </div>
+          </div>
+          <p class="glyph-description">
+            Preserves Sansation's authentic round curve while extending the bottom apex and terminal tip leftward by 80 units. This smoothly continues the arc, resolving the overly straight, abrupt truncation of the original tail.
+          </p>
+        </article>
+
+        <!-- Euro Symbol (€) -->
+        <article class="glyph-card" aria-labelledby="card-euro-title">
+          <div class="glyph-card-header">
+            <h3 id="card-euro-title" class="glyph-card-title">Euro Symbol (€ Crossbars)</h3>
+            <span class="glyph-card-tag">Crosses Through Spine</span>
+          </div>
+          <div class="glyph-render-row">
+            <div class="glyph-sample">
+              <span class="sample-char lygon">€</span>
+              <span class="sample-label lygon">Lygon Refined</span>
+            </div>
+            <div class="glyph-sample">
+              <span class="sample-char sansation">€</span>
+              <span class="sample-label sansation">Original Sansation</span>
+            </div>
+          </div>
+          <p class="glyph-description">
+            In Sansation, the two horizontal crossbars ended inside the inner counter, causing visual confusion with mathematical set membership symbols (like element-of). Lygon extends the crossbars all the way through the back curve, emerging cleanly on the left in accordance with standard typography.
+          </p>
+        </article>
+
+        <!-- Question Mark (?) -->
+        <article class="glyph-card" aria-labelledby="card-question-title">
+          <div class="glyph-card-header">
+            <h3 id="card-question-title" class="glyph-card-title">Question Mark (? Toned Down)</h3>
+            <span class="glyph-card-tag">Proportions Refined</span>
+          </div>
+          <div class="glyph-render-row">
+            <div class="glyph-sample">
+              <span class="sample-char lygon">?</span>
+              <span class="sample-label lygon">Lygon Refined</span>
+            </div>
+            <div class="glyph-sample">
+              <span class="sample-char sansation">?</span>
+              <span class="sample-label sansation">Original Sansation</span>
+            </div>
+          </div>
+          <p class="glyph-description">
+            In Sansation, the rounded head of the question mark bulged excessively to the right, creating a distended mushroom-like shape and awkward spacing in sentences. Lygon tones down the rightward overhang by ~80 units, achieving a balanced, modern curve while preserving its geometric character.
+          </p>
+        </article>
+
+        <!-- Registered Trademark Symbol (®) -->
+        <article class="glyph-card" aria-labelledby="card-registered-title">
+          <div class="glyph-card-header">
+            <h3 id="card-registered-title" class="glyph-card-title">Registered Symbol (® Inner R)</h3>
+            <span class="glyph-card-tag">Matches Refined R</span>
+          </div>
+          <div class="glyph-render-row">
+            <div class="glyph-sample">
+              <span class="sample-char lygon">®</span>
+              <span class="sample-label lygon">Lygon Refined</span>
+            </div>
+            <div class="glyph-sample">
+              <span class="sample-char sansation">®</span>
+              <span class="sample-label sansation">Original Sansation</span>
+            </div>
+          </div>
+          <p class="glyph-description">
+            In Sansation, the R inside the registered trademark symbol preserved the old, gaping cutout and wedge-shaped diagonal leg. Lygon synchronizes the inner R with the refined capital R geometry, featuring a harmonized cutout gap and uniform diagonal leg thickness.
+          </p>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- Section 3: Variable Weight Waterfall -->
+    <section class="specimen-section" aria-labelledby="section-weights-title">
+      <div class="section-header">
+        <h2 id="section-weights-title" class="section-title">Optical Weight Spectrum (300 to 700)</h2>
+        <p class="section-subtitle">
+          Continuous interpolation across the weight axis. Lygon includes 5 standard named instances in its STAT and fvar tables: Light, Regular, Medium, SemiBold, and Bold.
+        </p>
+      </div>
+
+      <div class="waterfall-table" role="table" aria-label="Variable weight waterfall">
+        <div class="waterfall-row" role="row">
+          <div class="waterfall-meta" role="cell">
+            <strong>Light</strong>
+            <span>Weight 300</span>
+          </div>
+          <div class="waterfall-text preview-text" style="font-weight: 300; font-size: 2.25rem;" role="cell">
+            Grumpy wizards make toxic brew for the evil Queen and Jack.
+          </div>
+        </div>
+
+        <div class="waterfall-row" role="row">
+          <div class="waterfall-meta" role="cell">
+            <strong>Regular</strong>
+            <span>Weight 400</span>
+          </div>
+          <div class="waterfall-text preview-text" style="font-weight: 400; font-size: 2.25rem;" role="cell">
+            Grumpy wizards make toxic brew for the evil Queen and Jack.
+          </div>
+        </div>
+
+        <div class="waterfall-row" role="row">
+          <div class="waterfall-meta" role="cell">
+            <strong>Medium</strong>
+            <span>Weight 500</span>
+          </div>
+          <div class="waterfall-text preview-text" style="font-weight: 500; font-size: 2.25rem;" role="cell">
+            Grumpy wizards make toxic brew for the evil Queen and Jack.
+          </div>
+        </div>
+
+        <div class="waterfall-row" role="row">
+          <div class="waterfall-meta" role="cell">
+            <strong>SemiBold</strong>
+            <span>Weight 600</span>
+          </div>
+          <div class="waterfall-text preview-text" style="font-weight: 600; font-size: 2.25rem;" role="cell">
+            Grumpy wizards make toxic brew for the evil Queen and Jack.
+          </div>
+        </div>
+
+        <div class="waterfall-row" role="row">
+          <div class="waterfall-meta" role="cell">
+            <strong>Bold</strong>
+            <span>Weight 700</span>
+          </div>
+          <div class="waterfall-text preview-text" style="font-weight: 700; font-size: 2.25rem;" role="cell">
+            Grumpy wizards make toxic brew for the evil Queen and Jack.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: OpenType Features Showcase -->
+    <section class="specimen-section" aria-labelledby="section-features-title">
+      <div class="section-header">
+        <h2 id="section-features-title" class="section-title">OpenType Typographic Features</h2>
+        <p class="section-subtitle">
+          Advanced typographic controls compiled directly into Lygon via AFDKO feature syntax.
+        </p>
+      </div>
+
+      <div class="feature-showcase-grid">
+
+        <!-- GPOS Kerning -->
+        <article class="feature-box">
+          <div class="feature-box-title">
+            <span>GPOS Kerning</span>
+            <span class="feature-tag">kern</span>
+          </div>
+          <div class="feature-demo" style="font-feature-settings: 'kern' 1;">
+            AV AW AY VA TA To Te Vo Wo Yo r. T. P.
+          </div>
+          <p class="feature-subtext">
+            Class-based and pair-based kerning eliminates awkward visual gaps between diagonal letters and punctuation marks.
+          </p>
+        </article>
+
+        <!-- Standard Ligatures -->
+        <article class="feature-box">
+          <div class="feature-box-title">
+            <span>Standard Ligatures</span>
+            <span class="feature-tag">liga</span>
+          </div>
+          <div class="feature-demo" style="font-feature-settings: 'liga' 1;">
+            fi fl ff ffi ffl fj ffj fjord official
+          </div>
+          <p class="feature-subtext">
+            Seamless combinations preventing collisions between ascenders, dots, and crossbars.
+          </p>
+        </article>
+
+        <!-- Discretionary Ligatures -->
+        <article class="feature-box">
+          <div class="feature-box-title">
+            <span>Discretionary Ligatures</span>
+            <span class="feature-tag">dlig</span>
+          </div>
+          <div class="feature-demo" style="font-feature-settings: 'dlig' 1;">
+            fk ffk fb ffb fh ffh kafkian matchmaking
+          </div>
+          <p class="feature-subtext">
+            Specialized display ligatures joining stems for decorative and brand headlines.
+          </p>
+        </article>
+
+        <!-- Stylistic Set 1: Alternate g -->
+        <article class="feature-box">
+          <div class="feature-box-title">
+            <span>Stylistic Set 1 (Alternate g)</span>
+            <span class="feature-tag">ss01</span>
+          </div>
+          <div class="feature-demo" style="font-feature-settings: 'ss01' 1;">
+            geography glowing language signage
+          </div>
+          <p class="feature-subtext">
+            Replaces the default open-loop g with a traditional double-storey closed-loop alternate.
+          </p>
+        </article>
+
+        <!-- Stylistic Set 2: Alternate k -->
+        <article class="feature-box">
+          <div class="feature-box-title">
+            <span>Stylistic Set 2 (Disconnected k)</span>
+            <span class="feature-tag">ss02</span>
+          </div>
+          <div class="feature-demo" style="font-feature-settings: 'ss02' 1;">
+            kitchen keepsake knockout sketchbook
+          </div>
+          <p class="feature-subtext">
+            Provides a distinct modern variant of lowercase k where the upper diagonal arm disconnects from the stem.
+          </p>
+        </article>
+
+        <!-- Stylistic Set 3: Capital German Eszett -->
+        <article class="feature-box">
+          <div class="feature-box-title">
+            <span>Stylistic Set 3 (Capital Eszett)</span>
+            <span class="feature-tag">ss03</span>
+          </div>
+          <div class="feature-demo" style="font-feature-settings: 'ss03' 1;">
+            STRAẞE GROẞE WEIẞENBURG
+          </div>
+          <p class="feature-subtext">
+            Substitutes the lowercase German double-s with the uppercase sharp S (ẞ) in all-caps German text.
+          </p>
+        </article>
+
+        <!-- Oldstyle Figures -->
+        <article class="feature-box">
+          <div class="feature-box-title">
+            <span>Numeral Systems</span>
+            <span class="feature-tag">lnum / onum</span>
+          </div>
+          <div class="feature-demo">
+            <div>Lining: 0123456789</div>
+            <div style="font-feature-settings: 'onum' 1; margin-top: 0.25rem;">Oldstyle: 0123456789</div>
+          </div>
+          <p class="feature-subtext">
+            Oldstyle figures blend seamlessly into body paragraphs with varied ascenders and descenders.
+          </p>
+        </article>
+
+        <!-- Fractions -->
+        <article class="feature-box">
+          <div class="feature-box-title">
+            <span>Precomposed Fractions</span>
+            <span class="feature-tag">frac</span>
+          </div>
+          <div class="feature-demo" style="font-feature-settings: 'frac' 1;">
+            1/2 1/4 3/4 (standard fraction substitution)
+          </div>
+          <p class="feature-subtext">
+            Automatically formats typed slash sequences into balanced, professional typographic fractions.
+          </p>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- Section 5: Custom Freeform Type Tester -->
+    <section class="specimen-section" aria-labelledby="section-tester-title">
+      <div class="section-header">
+        <h2 id="section-tester-title" class="section-title">Freeform Type Playground</h2>
+        <p class="section-subtitle">
+          Type or paste your own custom copy below. All styles, weights, and OpenType features set in the top bar apply immediately.
+        </p>
+      </div>
+      <label for="freeform-tester" class="sr-only">Interactive copy playground</label>
+      <textarea id="freeform-tester" class="tester-area" spellcheck="false">Architecture begins where engineering ends. Lygon brings balanced typographic rigor, uniform strokes, and full variable interpolation to screen and print design.</textarea>
+    </section>
+
+    <!-- Section 6: Complete Character Set -->
+    <section class="specimen-section" aria-labelledby="section-charset-title">
+      <div class="section-header">
+        <h2 id="section-charset-title" class="section-title">Character Set Matrix</h2>
+        <p class="section-subtitle">
+          Comprehensive Latin, Extended Latin, Cyrillic, and basic Greek glyph coverage.
+        </p>
+      </div>
+
+      <h3 style="font-size: 1rem; margin-top: 1rem; color: var(--text-muted);">Basic Uppercase &amp; Lowercase Latin</h3>
+      <div class="charset-grid" aria-label="Basic Latin characters">
+        <!-- Rendered dynamically by script or static grid -->
+        <span class="char-cell">A</span><span class="char-cell">B</span><span class="char-cell">C</span><span class="char-cell">D</span>
+        <span class="char-cell">E</span><span class="char-cell">F</span><span class="char-cell">G</span><span class="char-cell">H</span>
+        <span class="char-cell">I</span><span class="char-cell">J</span><span class="char-cell">K</span><span class="char-cell">L</span>
+        <span class="char-cell">M</span><span class="char-cell">N</span><span class="char-cell">O</span><span class="char-cell">P</span>
+        <span class="char-cell">Q</span><span class="char-cell">R</span><span class="char-cell">S</span><span class="char-cell">T</span>
+        <span class="char-cell">U</span><span class="char-cell">V</span><span class="char-cell">W</span><span class="char-cell">X</span>
+        <span class="char-cell">Y</span><span class="char-cell">Z</span>
+        <span class="char-cell">a</span><span class="char-cell">b</span><span class="char-cell">c</span><span class="char-cell">d</span>
+        <span class="char-cell">e</span><span class="char-cell">f</span><span class="char-cell">g</span><span class="char-cell">h</span>
+        <span class="char-cell">i</span><span class="char-cell">j</span><span class="char-cell">k</span><span class="char-cell">l</span>
+        <span class="char-cell">m</span><span class="char-cell">n</span><span class="char-cell">o</span><span class="char-cell">p</span>
+        <span class="char-cell">q</span><span class="char-cell">r</span><span class="char-cell">s</span><span class="char-cell">t</span>
+        <span class="char-cell">u</span><span class="char-cell">v</span><span class="char-cell">w</span><span class="char-cell">x</span>
+        <span class="char-cell">y</span><span class="char-cell">z</span>
+      </div>
+
+      <h3 style="font-size: 1rem; margin-top: 1.5rem; color: var(--text-muted);">Numerals, Punctuation &amp; Symbols</h3>
+      <div class="charset-grid" aria-label="Numerals and punctuation">
+        <span class="char-cell">0</span><span class="char-cell">1</span><span class="char-cell">2</span><span class="char-cell">3</span>
+        <span class="char-cell">4</span><span class="char-cell">5</span><span class="char-cell">6</span><span class="char-cell">7</span>
+        <span class="char-cell">8</span><span class="char-cell">9</span><span class="char-cell">&amp;</span>
+        <span class="char-cell">!</span><span class="char-cell">?</span><span class="char-cell">@</span><span class="char-cell">#</span>
+        <span class="char-cell">$</span><span class="char-cell">%</span><span class="char-cell">*</span><span class="char-cell">(</span>
+        <span class="char-cell">)</span><span class="char-cell">[</span><span class="char-cell">]</span><span class="char-cell">{</span>
+        <span class="char-cell">}</span><span class="char-cell">/</span><span class="char-cell">\</span><span class="char-cell">+</span>
+        <span class="char-cell">-</span><span class="char-cell">=</span><span class="char-cell">&lt;</span><span class="char-cell">&gt;</span>
+        <span class="char-cell">;</span><span class="char-cell">:</span><span class="char-cell">,</span><span class="char-cell">.</span>
+      </div>
+
+      <h3 style="font-size: 1rem; margin-top: 1.5rem; color: var(--text-muted);">Cyrillic &amp; Greek Letters</h3>
+      <div class="charset-grid" aria-label="Cyrillic and Greek characters">
+        <span class="char-cell">Б</span><span class="char-cell">Г</span><span class="char-cell">Д</span><span class="char-cell">Ж</span>
+        <span class="char-cell">И</span><span class="char-cell">Й</span><span class="char-cell">Л</span><span class="char-cell">П</span>
+        <span class="char-cell">Ф</span><span class="char-cell">Ц</span><span class="char-cell">Ч</span><span class="char-cell">Ш</span>
+        <span class="char-cell">Щ</span><span class="char-cell">Ъ</span><span class="char-cell">Ы</span><span class="char-cell">Ь</span>
+        <span class="char-cell">Э</span><span class="char-cell">Ю</span><span class="char-cell">Я</span><span class="char-cell">б</span>
+        <span class="char-cell">в</span><span class="char-cell">г</span><span class="char-cell">д</span><span class="char-cell">ж</span>
+        <span class="char-cell">и</span><span class="char-cell">й</span><span class="char-cell">к</span><span class="char-cell">л</span>
+        <span class="char-cell">п</span><span class="char-cell">т</span><span class="char-cell">ф</span><span class="char-cell">ц</span>
+        <span class="char-cell">ч</span><span class="char-cell">ш</span><span class="char-cell">щ</span><span class="char-cell">ъ</span>
+        <span class="char-cell">ы</span><span class="char-cell">ь</span><span class="char-cell">э</span><span class="char-cell">ю</span>
+        <span class="char-cell">я</span><span class="char-cell">Ω</span><span class="char-cell">π</span><span class="char-cell">β</span>
+      </div>
+    </section>
+
+    <!-- Section 7: Technical Metrics & Table Upgrades -->
+    <section class="specimen-section" aria-labelledby="section-metrics-title">
+      <div class="section-header">
+        <h2 id="section-metrics-title" class="section-title">OpenType Table Architecture &amp; Metrics</h2>
+        <p class="section-subtitle">
+          Summary of modern OpenType table modernization performed during the Lygon build pipeline.
+        </p>
+      </div>
+
+      <table class="metrics-table" role="table">
+        <caption class="sr-only">OpenType Table Upgrades and Parameters</caption>
+        <thead>
+          <tr>
+            <th scope="col">Table / Parameter</th>
+            <th scope="col">Value</th>
+            <th scope="col">Purpose / Standard</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">OS/2 Table Version</th>
+            <td>Version 4</td>
+            <td>Modern typography standards compliance</td>
+          </tr>
+          <tr>
+            <th scope="row">fsSelection bit 7</th>
+            <td>USE_TYPO_METRICS (1)</td>
+            <td>Enforces cross-platform vertical line-height consistency</td>
+          </tr>
+          <tr>
+            <th scope="row">sCapHeight</th>
+            <td>1430 font units</td>
+            <td>Enables accurate CSS cap unit alignment</td>
+          </tr>
+          <tr>
+            <th scope="row">sxHeight</th>
+            <td>1050 font units</td>
+            <td>Enables accurate CSS ex unit calculations</td>
+          </tr>
+          <tr>
+            <th scope="row">Units Per Em (UPM)</th>
+            <td>2048</td>
+            <td>High-precision TrueType outline coordinate space</td>
+          </tr>
+          <tr>
+            <th scope="row">Variable Axes</th>
+            <td>wght (300 to 700)</td>
+            <td>Continuous CSS font-weight interpolation</td>
+          </tr>
+          <tr>
+            <th scope="row">STAT Table</th>
+            <td>Complete with 5 axis values</td>
+            <td>Design application (Figma, Adobe CC) instance mapping</td>
+          </tr>
+          <tr>
+            <th scope="row">Italic Caret Slope</th>
+            <td>Rise 1430, Run 286 (-11.31 deg)</td>
+            <td>Accurate text selection cursor angle in italic text</td>
+          </tr>
+          <tr>
+            <th scope="row">gasp Table</th>
+            <td>0x000F (GASP_GRIDFIT | GASP_DOGRAY)</td>
+            <td>Optimized subpixel and ClearType antialiasing</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+
+  <!-- Footer with OFL Licensing -->
+  <footer class="specimen-footer" role="contentinfo">
+    <div class="footer-license">
+      <p>
+        <strong>Lygon Typeface Family</strong> is open source software licensed under the
+        <a href="https://openfontlicense.org" target="_blank" rel="noopener noreferrer">SIL Open Font License, Version 1.1</a>.
+      </p>
+      <p style="margin-top: 0.5rem;">
+        Based on the Sansation typeface created by Bernd Montag (Copyright 2011).
+        Refined geometry, variable axis compilation, OpenType feature set, and modernization by The Lygon Project Authors (Copyright 2026).
+      </p>
+    </div>
+  </footer>
+
+  <!-- Specimen Controller Script -->
+  <script>
+    // Self-contained specimen controller with full keyboard accessibility and reactive updates
+    (function () {
+      'use strict';
+
+      // State
+      const state = {
+        family: 'Lygon',
+        weight: 400,
+        style: 'normal',
+        size: 48,
+        features: {
+          kern: true,
+          liga: true,
+          dlig: false,
+          ss01: false,
+          ss02: false,
+          ss03: false,
+          onum: false,
+          frac: false,
+          case: false
+        }
+      };
+
+      // DOM Elements
+      const root = document.documentElement;
+      const weightSlider = document.getElementById('weight-slider');
+      const weightDisplay = document.getElementById('weight-display');
+      const sizeSlider = document.getElementById('size-slider');
+      const sizeDisplay = document.getElementById('size-display');
+      const btnFontLygon = document.getElementById('btn-font-lygon');
+      const btnFontSansation = document.getElementById('btn-font-sansation');
+      const btnStyleUpright = document.getElementById('btn-style-upright');
+      const btnStyleItalic = document.getElementById('btn-style-italic');
+      const presetButtons = document.querySelectorAll('.btn-preset');
+      const featureCheckboxes = document.querySelectorAll('.features-fieldset input[type="checkbox"]');
+      const announcer = document.getElementById('a11y-announcer');
+
+      // Helper to map weight values to human-readable names
+      function getWeightName(w) {
+        if (w <= 350) return 'Light';
+        if (w <= 450) return 'Regular';
+        if (w <= 550) return 'Medium';
+        if (w <= 650) return 'SemiBold';
+        return 'Bold';
+      }
+
+      // Update CSS variables on root
+      function updateTypography() {
+        // Font Family
+        root.style.setProperty('--specimen-family', state.family === 'Lygon' ? "'Lygon', sans-serif" : "'Sansation', sans-serif");
+
+        // Font Weight
+        root.style.setProperty('--specimen-weight', state.weight);
+        weightDisplay.textContent = state.weight + ' (' + getWeightName(state.weight) + ')';
+        weightSlider.setAttribute('aria-valuenow', state.weight);
+
+        // Font Style
+        root.style.setProperty('--specimen-style', state.style);
+
+        // Font Size
+        root.style.setProperty('--specimen-size', state.size + 'px');
+        sizeDisplay.textContent = state.size + 'px';
+        sizeSlider.setAttribute('aria-valuenow', state.size);
+
+        // OpenType Feature Settings String
+        const featEntries = [];
+        for (const [feat, enabled] of Object.entries(state.features)) {
+          featEntries.push('"' + feat + '" ' + (enabled ? 1 : 0));
+        }
+        root.style.setProperty('--specimen-features', featEntries.join(', '));
+      }
+
+      // Announce state change to screen readers politely
+      let announceTimeout = null;
+      function announce(msg) {
+        if (announceTimeout) clearTimeout(announceTimeout);
+        announceTimeout = setTimeout(function () {
+          announcer.textContent = msg;
+        }, 300);
+      }
+
+      // Weight Slider Event
+      weightSlider.addEventListener('input', function (e) {
+        state.weight = parseInt(e.target.value, 10);
+        updateTypography();
+
+        // Update preset button active states
+        presetButtons.forEach(function (btn) {
+          const btnWeight = parseInt(btn.dataset.weight, 10);
+          btn.classList.toggle('active', btnWeight === state.weight);
+        });
+      });
+
+      weightSlider.addEventListener('change', function () {
+        announce('Weight adjusted to ' + state.weight + ', ' + getWeightName(state.weight));
+      });
+
+      // Weight Presets Click
+      presetButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const w = parseInt(btn.dataset.weight, 10);
+          state.weight = w;
+          weightSlider.value = w;
+          presetButtons.forEach(function (b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          updateTypography();
+          announce('Weight set to ' + getWeightName(w) + ' (' + w + ')');
+        });
+      });
+
+      // Font Family Toggle
+      btnFontLygon.addEventListener('click', function () {
+        state.family = 'Lygon';
+        btnFontLygon.classList.add('active');
+        btnFontLygon.setAttribute('aria-checked', 'true');
+        btnFontSansation.classList.remove('active');
+        btnFontSansation.setAttribute('aria-checked', 'false');
+        updateTypography();
+        announce('Switched font family to Lygon Refined');
+      });
+
+      btnFontSansation.addEventListener('click', function () {
+        state.family = 'Sansation';
+        btnFontSansation.classList.add('active');
+        btnFontSansation.setAttribute('aria-checked', 'true');
+        btnFontLygon.classList.remove('active');
+        btnFontLygon.setAttribute('aria-checked', 'false');
+        updateTypography();
+        announce('Switched font family to Sansation Original');
+      });
+
+      // Style Toggle (Upright / Italic)
+      btnStyleUpright.addEventListener('click', function () {
+        state.style = 'normal';
+        btnStyleUpright.classList.add('active');
+        btnStyleUpright.setAttribute('aria-checked', 'true');
+        btnStyleItalic.classList.remove('active');
+        btnStyleItalic.setAttribute('aria-checked', 'false');
+        updateTypography();
+        announce('Switched style to Upright');
+      });
+
+      btnStyleItalic.addEventListener('click', function () {
+        state.style = 'italic';
+        btnStyleItalic.classList.add('active');
+        btnStyleItalic.setAttribute('aria-checked', 'true');
+        btnStyleUpright.classList.remove('active');
+        btnStyleUpright.setAttribute('aria-checked', 'false');
+        updateTypography();
+        announce('Switched style to Italic');
+      });
+
+      // Size Slider Event
+      sizeSlider.addEventListener('input', function (e) {
+        state.size = parseInt(e.target.value, 10);
+        updateTypography();
+      });
+
+      // Feature Checkboxes Event
+      featureCheckboxes.forEach(function (cb) {
+        cb.addEventListener('change', function () {
+          const featName = cb.dataset.feature;
+          state.features[featName] = cb.checked;
+          updateTypography();
+          announce('Feature ' + featName + ' ' + (cb.checked ? 'enabled' : 'disabled'));
+        });
+      });
+
+      // Initialize
+      updateTypography();
+    })();
+  </script>
+</body>
+</html>

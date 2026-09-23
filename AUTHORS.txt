@@ -1,0 +1,4 @@
+# This is the official list of the Lygon Project Authors.
+# For the full copyright and license information, see OFL.txt.
+
+Toni Lahdekorpi <https://github.com/lahdekorpi>

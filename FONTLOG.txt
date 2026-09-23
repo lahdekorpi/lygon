@@ -1,0 +1,41 @@
+FONTLOG: Lygon Font Family
+
+This file provides detailed information on the Lygon font software.
+This information should be distributed along with the Lygon fonts
+and any derivative works.
+
+Basic Font Information
+----------------------
+Lygon is a modern geometric variable sans-serif font family. It is a 
+refined modernization of Sansation, originally designed by Bernd Montag (2011).
+
+ChangeLog
+---------
+2026-09-23 Toni Lahdekorpi (https://github.com/lahdekorpi/lygon)
+- Renamed font family to Lygon to comply with SIL OFL Reserved Font Name terms.
+- Normalized cutout proportions on uppercase B, K, P, and R by halving the 
+  internal gap (~90 to 115 units) to match the proportion anchor of letter A.
+- Enforced uniform diagonal leg thickness on K and R, eliminating wedge distortion.
+- Redesigned lowercase k with clean contemporary straight arms matching capital K; 
+  preserved original looped arch under OpenType stylistic set 2 (ss02).
+- Extended lowercase j with a smooth, authentic round sweep descender.
+- Redesigned Euro currency symbol (€) so both horizontal crossbars slice cleanly 
+  through the back spine curve to the left.
+- Toned down the distended, ballooning round head of the question mark (?) 
+  and inverted question mark (¿) by ~80 units.
+- Synchronized the inner R of the registered trademark symbol (®) with Lygon's 
+  refined capital R geometry.
+- Removed forced fused ligatures (fi, fl, ff, ffi, ffl, fj, ffj) from OpenType 
+  standard ligatures (liga) to ensure crisp, independent letter rendering.
+- Engineered continuous variable font axes (wght 300 to 700) for upright and italic.
+- Harmonized master topologies and point indices across all six master styles.
+- Modernized OS/2 (Version 4, USE_TYPO_METRICS), STAT, hhea, post, and gasp tables.
+- Generated 10 static instances across TTF, WOFF, and WOFF2 formats.
+
+Acknowledgements
+----------------
+If you make modifications, please consider cultivating that style of 
+generosity and share your modifications with the community.
+
+- Bernd Montag for creating the original Sansation font family (2011).
+- Toni Lähdekorpi.

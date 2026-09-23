@@ -1,0 +1,1740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lygon Typographic Inspection & Glyph Diagnostic</title>
+  <style>
+    @font-face {
+      font-family: 'Lygon';
+      src: url('../fonts/woff2/Lygon[wght].woff2') format('woff2');
+      font-weight: 300 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Lygon';
+      src: url('../fonts/woff2/Lygon-Italic[wght].woff2') format('woff2');
+      font-weight: 300 700;
+      font-style: italic;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Sansation';
+      src: url('../sources/Sansation-Regular.ttf') format('truetype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Sansation';
+      src: url('../sources/Sansation-Bold.ttf') format('truetype');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Sansation';
+      src: url('../sources/Sansation-Light.ttf') format('truetype');
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --lygon-color: #0284c7;
+      --sansation-color: #e11d48;
+      --accent: #2563eb;
+      --badge-mod-bg: #eff6ff;
+      --badge-mod-border: #bfdbfe;
+      --badge-mod-text: #1d4ed8;
+      --badge-std-bg: #f1f5f9;
+      --badge-std-border: #e2e8f0;
+      --badge-std-text: #64748b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.5;
+      padding: 2.5rem 1.5rem;
+    }
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 10px;
+      background: #0284c7;
+      color: #ffffff;
+      padding: 8px 12px;
+      z-index: 100;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    .skip-link:focus { top: 10px; }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    header {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      color: #0f172a;
+    }
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+      max-width: 900px;
+    }
+    .legend-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      background: #f1f5f9;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+    .dot-lygon { background-color: var(--lygon-color); }
+    .dot-sansation { background-color: var(--sansation-color); }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-top: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .section-desc {
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+      font-size: 0.95rem;
+    }
+
+    .glyph-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .glyph-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      position: relative;
+    }
+    .glyph-card.is-modified {
+      border-color: #93c5fd;
+      background: #fcfdff;
+    }
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .card-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #64748b;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      line-height: 1.3;
+    }
+    .badge-modified {
+      background-color: var(--badge-mod-bg);
+      border: 1px solid var(--badge-mod-border);
+      color: var(--badge-mod-text);
+    }
+    .badge-standard {
+      background-color: var(--badge-std-bg);
+      border: 1px solid var(--badge-std-border);
+      color: var(--badge-std-text);
+    }
+    .glyph-compare-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-around;
+      padding: 0.5rem 0;
+      border-top: 1px solid #f1f5f9;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .glyph-box {
+      text-align: center;
+      flex: 1;
+    }
+    .glyph-char {
+      font-size: 4.5rem;
+      line-height: 1;
+      display: block;
+      height: 5rem;
+    }
+    .char-lygon {
+      font-family: 'Lygon', sans-serif;
+      color: var(--lygon-color);
+    }
+    .char-sansation {
+      font-family: 'Sansation', sans-serif;
+      color: var(--sansation-color);
+    }
+    .glyph-sublabel {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-top: 0.25rem;
+    }
+    .sublabel-lygon { color: var(--lygon-color); }
+    .sublabel-sansation { color: var(--sansation-color); }
+    .card-notes {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .card-words {
+      display: flex;
+      gap: 1rem;
+      font-size: 1.15rem;
+      padding-top: 0.25rem;
+    }
+    .word-lygon {
+      font-family: 'Lygon', sans-serif;
+      color: #0f172a;
+    }
+    .word-sansation {
+      font-family: 'Sansation', sans-serif;
+      color: #64748b;
+    }
+
+    /* Full character chart */
+    .chart-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    .chart-heading {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #1e293b;
+    }
+    .chart-row {
+      font-family: 'Lygon', sans-serif;
+      font-size: 2.25rem;
+      line-height: 1.6;
+      word-break: break-all;
+      letter-spacing: 0.05em;
+      padding: 0.75rem 0;
+      color: #0f172a;
+    }
+    .chart-row-secondary {
+      font-family: 'Sansation', sans-serif;
+      font-size: 2.25rem;
+      line-height: 1.6;
+      word-break: break-all;
+      letter-spacing: 0.05em;
+      padding: 0.75rem 0;
+      color: var(--sansation-color);
+    }
+
+    /* Paragraph and weight comparison */
+    .weight-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .weight-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+    }
+    .weight-label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #64748b;
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+    }
+    .sample-headline {
+      font-family: 'Lygon', sans-serif;
+      font-size: 1.75rem;
+      line-height: 1.25;
+      margin-bottom: 0.75rem;
+      color: #0f172a;
+    }
+    .sample-body {
+      font-family: 'Lygon', sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #334155;
+    }
+
+    /* Observation table */
+    .table-container {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow-x: auto;
+      margin-bottom: 2.5rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+    th, td {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      background: #f8fafc;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+    tr:last-child td { border-bottom: none; }
+    td.glyph-cell {
+      font-family: 'Lygon', sans-serif;
+      font-size: 2.25rem;
+      line-height: 1;
+      width: 80px;
+      text-align: center;
+    }
+    td.glyph-orig {
+      font-family: 'Sansation', sans-serif;
+      font-size: 2.25rem;
+      line-height: 1;
+      width: 80px;
+      text-align: center;
+      color: var(--sansation-color);
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <div class="container" id="main-content">
+    <header>
+      <h1>Lygon Typographic Inspection & Glyph Diagnostic</h1>
+      <p class="subtitle">
+        Comprehensive comparative rendering across all uppercase letters (A to Z), lowercase letters (a to z),
+        numerals, punctuation, diacritics, and multi-weight textures. Evaluated against original Sansation.
+      </p>
+      <div class="legend-bar" role="region" aria-label="Inspection Legend">
+        <span class="legend-item"><span class="legend-dot dot-lygon"></span> <strong>Lygon (Refined)</strong></span>
+        <span class="legend-item"><span class="legend-dot dot-sansation"></span> <strong>Sansation (Original)</strong></span>
+        <span style="color: #64748b; margin-left: auto;">Font Version: 1.000 | OpenType & Variable wght 300 to 700</span>
+      </div>
+    </header>
+
+    <section aria-labelledby="heading-uppercase">
+      <h2 id="heading-uppercase" class="section-title">
+        Uppercase Alphabet (A to Z)
+      </h2>
+      <p class="section-desc">
+        Direct side-by-side inspection of all 26 capital letters. Highlights normalized cutouts on B, K, P, R
+        anchored to letter A proportions, and verified uniform stroke thickness.
+      </p>
+      <div class="glyph-grid">
+
+        <article class="glyph-card is-modified" aria-label="Uppercase letter A">
+          <div class="card-top">
+            <span class="card-label">Letter A</span>
+            <span class="badge badge-modified">Proportion Benchmark</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">A</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">A</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Natural cutout (~95-110 units) served as reference anchor</p>
+          <div class="card-words" aria-label="Sample words in A">
+            <span class="word-lygon" title="Lygon word sample">ATOM</span>
+            <span class="word-sansation" title="Sansation word sample">HAVANA</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card is-modified" aria-label="Uppercase letter B">
+          <div class="card-top">
+            <span class="card-label">Letter B</span>
+            <span class="badge badge-modified">Cutout Normalized</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">B</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">B</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Inner cutout halved from 218u to 105u; outer bowl curve preserved</p>
+          <div class="card-words" aria-label="Sample words in B">
+            <span class="word-lygon" title="Lygon word sample">BOLD</span>
+            <span class="word-sansation" title="Sansation word sample">AMBER</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Uppercase letter C">
+          <div class="card-top">
+            <span class="card-label">Letter C</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">C</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">C</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Open round counter with standard terminals</p>
+          <div class="card-words" aria-label="Sample words in C">
+            <span class="word-lygon" title="Lygon word sample">CITY</span>
+            <span class="word-sansation" title="Sansation word sample">ECHO</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Uppercase letter D">
+          <div class="card-top">
+            <span class="card-label">Letter D</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">D</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">D</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Enclosed double-contour bowl; clean geometry</p>
+          <div class="card-words" aria-label="Sample words in D">
+            <span class="word-lygon" title="Lygon word sample">DATA</span>
+            <span class="word-sansation" title="Sansation word sample">RADIO</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Uppercase letter E">
+          <div class="card-top">
+            <span class="card-label">Letter E</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">E</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">E</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Three horizontal bars; middle bar slightly shorter</p>
+          <div class="card-words" aria-label="Sample words in E">
+            <span class="word-lygon" title="Lygon word sample">EDGE</span>
+            <span class="word-sansation" title="Sansation word sample">SPEED</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Uppercase letter F">
+          <div class="card-top">
+            <span class="card-label">Letter F</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">F</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">F</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Two horizontal bars matching E proportions</p>
+          <div class="card-words" aria-label="Sample words in F">
+            <span class="word-lygon" title="Lygon word sample">FLOW</span>
+            <span class="word-sansation" title="Sansation word sample">CRAFT</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Uppercase letter G">
+          <div class="card-top">
+            <span class="card-label">Letter G</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">G</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">G</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Circular counter with horizontal inward spur</p>
+          <div class="card-words" aria-label="Sample words in G">
+            <span class="word-lygon" title="Lygon word sample">GIGA</span>
+            <span class="word-sansation" title="Sansation word sample">ORGAN</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Uppercase letter H">
+          <div class="card-top">
+            <span class="card-label">Letter H</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">H</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">H</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Balanced parallel stems with centered crossbar</p>
+          <div class="card-words" aria-label="Sample words in H">
+            <span class="word-lygon" title="Lygon word sample">HIGH</span>
+            <span class="word-sansation" title="Sansation word sample">ALPHA</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Uppercase letter I">
+          <div class="card-top">
+            <span class="card-label">Letter I</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">I</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">I</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Clean vertical monostem</p>
+          <div class="card-words" aria-label="Sample words in I">
+            <span class="word-lygon" title="Lygon word sample">ICON</span>
+            <span class="word-sansation" title="Sansation word sample">PRISM</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Uppercase letter J">
+          <div class="card-top">
+            <span class="card-label">Letter J</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">J</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">J</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Descender hooked stem with flat terminal</p>
+          <div class="card-words" aria-label="Sample words in J">
+            <span class="word-lygon" title="Lygon word sample">JAZZ</span>
+            <span class="word-sansation" title="Sansation word sample">MAJOR</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card is-modified" aria-label="Uppercase letter K">
+          <div class="card-top">
+            <span class="card-label">Letter K</span>
+            <span class="badge badge-modified">Uniform Arms & Normalized Cutout</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">K</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">K</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Cutout halved; diagonal arms keep constant 182u stroke (no wedges)</p>
+          <div class="card-words" aria-label="Sample words in K">
+            <span class="word-lygon" title="Lygon word sample">KING</span>
+            <span class="word-sansation" title="Sansation word sample">SKATER</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Uppercase letter L">
+          <div class="card-top">
+            <span class="card-label">Letter L</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">L</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">L</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Vertical stem with horizontal baseline foot</p>
+          <div class="card-words" aria-label="Sample words in L">
+            <span class="word-lygon" title="Lygon word sample">LOOP</span>
+            <span class="word-sansation" title="Sansation word sample">SCALE</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Uppercase letter M">
+          <div class="card-top">
+            <span class="card-label">Letter M</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">M</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">M</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Diagonal vertex terminates at baseline</p>
+          <div class="card-words" aria-label="Sample words in M">
+            <span class="word-lygon" title="Lygon word sample">METRO</span>
+            <span class="word-sansation" title="Sansation word sample">GAMMA</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Uppercase letter N">
+          <div class="card-top">
+            <span class="card-label">Letter N</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">N</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">N</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Sharp diagonal stroke between vertical stems</p>
+          <div class="card-words" aria-label="Sample words in N">
+            <span class="word-lygon" title="Lygon word sample">NEON</span>
+            <span class="word-sansation" title="Sansation word sample">SIGNAL</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Uppercase letter O">
+          <div class="card-top">
+            <span class="card-label">Letter O</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">O</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">O</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Harmonious circular geometry</p>
+          <div class="card-words" aria-label="Sample words in O">
+            <span class="word-lygon" title="Lygon word sample">ORBIT</span>
+            <span class="word-sansation" title="Sansation word sample">MOON</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card is-modified" aria-label="Uppercase letter P">
+          <div class="card-top">
+            <span class="card-label">Letter P</span>
+            <span class="badge badge-modified">Cutout Normalized</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">P</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">P</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Lower bowl cutout halved from 205u to 100u; curvature preserved</p>
+          <div class="card-words" aria-label="Sample words in P">
+            <span class="word-lygon" title="Lygon word sample">PEAK</span>
+            <span class="word-sansation" title="Sansation word sample">SPRING</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Uppercase letter Q">
+          <div class="card-top">
+            <span class="card-label">Letter Q</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">Q</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">Q</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Circular counter with straight rightward tail</p>
+          <div class="card-words" aria-label="Sample words in Q">
+            <span class="word-lygon" title="Lygon word sample">QUEST</span>
+            <span class="word-sansation" title="Sansation word sample">LIQUID</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card is-modified" aria-label="Uppercase letter R">
+          <div class="card-top">
+            <span class="card-label">Letter R</span>
+            <span class="badge badge-modified">Uniform Leg & Normalized Cutout</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">R</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">R</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Cutout halved; diagonal leg keeps constant 182u stroke (no wedges)</p>
+          <div class="card-words" aria-label="Sample words in R">
+            <span class="word-lygon" title="Lygon word sample">ROYAL</span>
+            <span class="word-sansation" title="Sansation word sample">FOREST</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Uppercase letter S">
+          <div class="card-top">
+            <span class="card-label">Letter S</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">S</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">S</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Dynamic double-curve with horizontal terminal cuts</p>
+          <div class="card-words" aria-label="Sample words in S">
+            <span class="word-lygon" title="Lygon word sample">SOUND</span>
+            <span class="word-sansation" title="Sansation word sample">PULSE</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Uppercase letter T">
+          <div class="card-top">
+            <span class="card-label">Letter T</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">T</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">T</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Centered horizontal crossbar over vertical stem</p>
+          <div class="card-words" aria-label="Sample words in T">
+            <span class="word-lygon" title="Lygon word sample">TRACE</span>
+            <span class="word-sansation" title="Sansation word sample">VECTOR</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Uppercase letter U">
+          <div class="card-top">
+            <span class="card-label">Letter U</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">U</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">U</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Clean curved bottom with parallel upright stems</p>
+          <div class="card-words" aria-label="Sample words in U">
+            <span class="word-lygon" title="Lygon word sample">UNITY</span>
+            <span class="word-sansation" title="Sansation word sample">FOCUS</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Uppercase letter V">
+          <div class="card-top">
+            <span class="card-label">Letter V</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">V</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">V</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Symmetric diagonal strokes meeting at baseline apex</p>
+          <div class="card-words" aria-label="Sample words in V">
+            <span class="word-lygon" title="Lygon word sample">VALVE</span>
+            <span class="word-sansation" title="Sansation word sample">DIVIDE</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Uppercase letter W">
+          <div class="card-top">
+            <span class="card-label">Letter W</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">W</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">W</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Interlocking diagonal strokes with dual baseline vertices</p>
+          <div class="card-words" aria-label="Sample words in W">
+            <span class="word-lygon" title="Lygon word sample">WAVE</span>
+            <span class="word-sansation" title="Sansation word sample">POWER</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Uppercase letter X">
+          <div class="card-top">
+            <span class="card-label">Letter X</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">X</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">X</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Balanced diagonal cross with centered intersection</p>
+          <div class="card-words" aria-label="Sample words in X">
+            <span class="word-lygon" title="Lygon word sample">XRAY</span>
+            <span class="word-sansation" title="Sansation word sample">PIXEL</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Uppercase letter Y">
+          <div class="card-top">
+            <span class="card-label">Letter Y</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">Y</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">Y</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Diagonal upper arms meeting at central vertical stem</p>
+          <div class="card-words" aria-label="Sample words in Y">
+            <span class="word-lygon" title="Lygon word sample">YACHT</span>
+            <span class="word-sansation" title="Sansation word sample">SYSTEM</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Uppercase letter Z">
+          <div class="card-top">
+            <span class="card-label">Letter Z</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">Z</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">Z</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Horizontal top and bottom bars with diagonal spine</p>
+          <div class="card-words" aria-label="Sample words in Z">
+            <span class="word-lygon" title="Lygon word sample">ZERO</span>
+            <span class="word-sansation" title="Sansation word sample">OZONE</span>
+          </div>
+        </article>
+    
+      </div>
+    </section>
+
+    <section aria-labelledby="heading-lowercase">
+      <h2 id="heading-lowercase" class="section-title">
+        Lowercase Alphabet (a to z)
+      </h2>
+      <p class="section-desc">
+        Direct side-by-side inspection of all 26 lowercase letters. Highlights straight-arm redesign on k,
+        user-refined swept descender on j (-80u shift), and variable topology harmonization on g and i.
+      </p>
+      <div class="glyph-grid">
+
+        <article class="glyph-card" aria-label="Lowercase letter a">
+          <div class="card-top">
+            <span class="card-label">Letter a</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">a</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">a</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Two-story construction with curved upper hood and lower bowl</p>
+          <div class="card-words" aria-label="Sample words in a">
+            <span class="word-lygon" title="Lygon word sample">aqua</span>
+            <span class="word-sansation" title="Sansation word sample">blanket</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Lowercase letter b">
+          <div class="card-top">
+            <span class="card-label">Letter b</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">b</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">b</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Ascender stem with enclosed lower bowl</p>
+          <div class="card-words" aria-label="Sample words in b">
+            <span class="word-lygon" title="Lygon word sample">bold</span>
+            <span class="word-sansation" title="Sansation word sample">rabbit</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Lowercase letter c">
+          <div class="card-top">
+            <span class="card-label">Letter c</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">c</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">c</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Open circular curve matching uppercase C proportions</p>
+          <div class="card-words" aria-label="Sample words in c">
+            <span class="word-lygon" title="Lygon word sample">code</span>
+            <span class="word-sansation" title="Sansation word sample">circle</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Lowercase letter d">
+          <div class="card-top">
+            <span class="card-label">Letter d</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">d</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">d</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Enclosed lower bowl with tall vertical ascender</p>
+          <div class="card-words" aria-label="Sample words in d">
+            <span class="word-lygon" title="Lygon word sample">dock</span>
+            <span class="word-sansation" title="Sansation word sample">spider</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card is-modified" aria-label="Lowercase letter e">
+          <div class="card-top">
+            <span class="card-label">Letter e</span>
+            <span class="badge badge-modified">Contour Harmonized</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">e</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">e</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Horizontal bar with curved counter; contour points cleaned</p>
+          <div class="card-words" aria-label="Sample words in e">
+            <span class="word-lygon" title="Lygon word sample">echo</span>
+            <span class="word-sansation" title="Sansation word sample">vertex</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Lowercase letter f">
+          <div class="card-top">
+            <span class="card-label">Letter f</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">f</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">f</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Curved ascender arch with horizontal crossbar</p>
+          <div class="card-words" aria-label="Sample words in f">
+            <span class="word-lygon" title="Lygon word sample">font</span>
+            <span class="word-sansation" title="Sansation word sample">coffee</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card is-modified" aria-label="Lowercase letter g">
+          <div class="card-top">
+            <span class="card-label">Letter g</span>
+            <span class="badge badge-modified">Topology Harmonized</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">g</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">g</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Added junction point (797, 20) in Bold to fix variable interpolation</p>
+          <div class="card-words" aria-label="Sample words in g">
+            <span class="word-lygon" title="Lygon word sample">glow</span>
+            <span class="word-sansation" title="Sansation word sample">signal</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Lowercase letter h">
+          <div class="card-top">
+            <span class="card-label">Letter h</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">h</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">h</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Ascender stem with curved shoulder branching right</p>
+          <div class="card-words" aria-label="Sample words in h">
+            <span class="word-lygon" title="Lygon word sample">harp</span>
+            <span class="word-sansation" title="Sansation word sample">shadow</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card is-modified" aria-label="Lowercase letter i">
+          <div class="card-top">
+            <span class="card-label">Letter i</span>
+            <span class="badge badge-modified">Contour Harmonized</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">i</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">i</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Contour ordering aligned across masters (dot=0, stem=1)</p>
+          <div class="card-words" aria-label="Sample words in i">
+            <span class="word-lygon" title="Lygon word sample">item</span>
+            <span class="word-sansation" title="Sansation word sample">pixel</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card is-modified" aria-label="Lowercase letter j">
+          <div class="card-top">
+            <span class="card-label">Letter j</span>
+            <span class="badge badge-modified">User Curve Refinement</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">j</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">j</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Bottom apex and tip shifted -80u (j_modified.svg); smooth round sweep</p>
+          <div class="card-words" aria-label="Sample words in j">
+            <span class="word-lygon" title="Lygon word sample">jump</span>
+            <span class="word-sansation" title="Sansation word sample">fjord</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card is-modified" aria-label="Lowercase letter k">
+          <div class="card-top">
+            <span class="card-label">Letter k</span>
+            <span class="badge badge-modified">Straight-Arm Redesign</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">k</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">k</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Modern straight arms matching K; loop archived under ss02</p>
+          <div class="card-words" aria-label="Sample words in k">
+            <span class="word-lygon" title="Lygon word sample">kick</span>
+            <span class="word-sansation" title="Sansation word sample">sketch</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Lowercase letter l">
+          <div class="card-top">
+            <span class="card-label">Letter l</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">l</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">l</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Clean vertical monostem ascender</p>
+          <div class="card-words" aria-label="Sample words in l">
+            <span class="word-lygon" title="Lygon word sample">link</span>
+            <span class="word-sansation" title="Sansation word sample">yellow</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Lowercase letter m">
+          <div class="card-top">
+            <span class="card-label">Letter m</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">m</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">m</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Dual curved arches with uniform stroke widths</p>
+          <div class="card-words" aria-label="Sample words in m">
+            <span class="word-lygon" title="Lygon word sample">mesh</span>
+            <span class="word-sansation" title="Sansation word sample">summer</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Lowercase letter n">
+          <div class="card-top">
+            <span class="card-label">Letter n</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">n</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">n</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Vertical stem with single curved shoulder</p>
+          <div class="card-words" aria-label="Sample words in n">
+            <span class="word-lygon" title="Lygon word sample">node</span>
+            <span class="word-sansation" title="Sansation word sample">tunnel</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Lowercase letter o">
+          <div class="card-top">
+            <span class="card-label">Letter o</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">o</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">o</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Enclosed geometric circle matching x-height</p>
+          <div class="card-words" aria-label="Sample words in o">
+            <span class="word-lygon" title="Lygon word sample">open</span>
+            <span class="word-sansation" title="Sansation word sample">smooth</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Lowercase letter p">
+          <div class="card-top">
+            <span class="card-label">Letter p</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">p</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">p</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Enclosed bowl with straight descender stem</p>
+          <div class="card-words" aria-label="Sample words in p">
+            <span class="word-lygon" title="Lygon word sample">pack</span>
+            <span class="word-sansation" title="Sansation word sample">copper</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Lowercase letter q">
+          <div class="card-top">
+            <span class="card-label">Letter q</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">q</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">q</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Enclosed bowl with straight descender stem on right</p>
+          <div class="card-words" aria-label="Sample words in q">
+            <span class="word-lygon" title="Lygon word sample">quiz</span>
+            <span class="word-sansation" title="Sansation word sample">opaque</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Lowercase letter r">
+          <div class="card-top">
+            <span class="card-label">Letter r</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">r</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">r</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Vertical stem with curved rightward terminal hook</p>
+          <div class="card-words" aria-label="Sample words in r">
+            <span class="word-lygon" title="Lygon word sample">ruby</span>
+            <span class="word-sansation" title="Sansation word sample">forest</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Lowercase letter s">
+          <div class="card-top">
+            <span class="card-label">Letter s</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">s</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">s</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Proportional double-curve matching uppercase S character</p>
+          <div class="card-words" aria-label="Sample words in s">
+            <span class="word-lygon" title="Lygon word sample">silk</span>
+            <span class="word-sansation" title="Sansation word sample">blossom</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Lowercase letter t">
+          <div class="card-top">
+            <span class="card-label">Letter t</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">t</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">t</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Vertical stem with lower curve and crossbar at x-height</p>
+          <div class="card-words" aria-label="Sample words in t">
+            <span class="word-lygon" title="Lygon word sample">task</span>
+            <span class="word-sansation" title="Sansation word sample">matrix</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Lowercase letter u">
+          <div class="card-top">
+            <span class="card-label">Letter u</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">u</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">u</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Curved bottom basin with right vertical stem</p>
+          <div class="card-words" aria-label="Sample words in u">
+            <span class="word-lygon" title="Lygon word sample">unit</span>
+            <span class="word-sansation" title="Sansation word sample">future</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Lowercase letter v">
+          <div class="card-top">
+            <span class="card-label">Letter v</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">v</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">v</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Symmetric diagonal strokes meeting at baseline</p>
+          <div class="card-words" aria-label="Sample words in v">
+            <span class="word-lygon" title="Lygon word sample">volt</span>
+            <span class="word-sansation" title="Sansation word sample">canvas</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Lowercase letter w">
+          <div class="card-top">
+            <span class="card-label">Letter w</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">w</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">w</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Dual diagonal valleys with centered middle apex</p>
+          <div class="card-words" aria-label="Sample words in w">
+            <span class="word-lygon" title="Lygon word sample">wave</span>
+            <span class="word-sansation" title="Sansation word sample">network</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Lowercase letter x">
+          <div class="card-top">
+            <span class="card-label">Letter x</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">x</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">x</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Proportional diagonal cross at x-height</p>
+          <div class="card-words" aria-label="Sample words in x">
+            <span class="word-lygon" title="Lygon word sample">xenon</span>
+            <span class="word-sansation" title="Sansation word sample">complex</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Lowercase letter y">
+          <div class="card-top">
+            <span class="card-label">Letter y</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">y</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">y</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Diagonal stem descending below baseline with angled cutoff</p>
+          <div class="card-words" aria-label="Sample words in y">
+            <span class="word-lygon" title="Lygon word sample">yarn</span>
+            <span class="word-sansation" title="Sansation word sample">crypto</span>
+          </div>
+        </article>
+    
+        <article class="glyph-card" aria-label="Lowercase letter z">
+          <div class="card-top">
+            <span class="card-label">Letter z</span>
+            <span class="badge badge-standard">Original Design</span>
+          </div>
+          <div class="glyph-compare-row">
+            <div class="glyph-box">
+              <span class="glyph-char char-lygon">z</span>
+              <span class="glyph-sublabel sublabel-lygon">Lygon</span>
+            </div>
+            <div class="glyph-box">
+              <span class="glyph-char char-sansation">z</span>
+              <span class="glyph-sublabel sublabel-sansation">Sansation</span>
+            </div>
+          </div>
+          <p class="card-notes">Horizontal bars with diagonal spine at x-height</p>
+          <div class="card-words" aria-label="Sample words in z">
+            <span class="word-lygon" title="Lygon word sample">zinc</span>
+            <span class="word-sansation" title="Sansation word sample">puzzle</span>
+          </div>
+        </article>
+    
+      </div>
+    </section>
+
+    <section aria-labelledby="heading-numbers-symbols">
+      <h2 id="heading-numbers-symbols" class="section-title">
+        Numerals, Punctuation & Extended Glyphs
+      </h2>
+      <p class="section-desc">
+        Reviewing numerals (0 to 9), currency symbols, math operators, German diacritics (ä, ö, ü, ß, ẞ),
+        and accented Latin glyphs.
+      </p>
+      <div class="chart-panel">
+        <h3 class="chart-heading">Numerals (0 to 9) & Financials</h3>
+        <div class="chart-row">0 1 2 3 4 5 6 7 8 9 $ € £ ¥ ¢ % ‰ + − × ÷ = ±</div>
+        <div class="chart-row-secondary">0 1 2 3 4 5 6 7 8 9 $ € £ ¥ ¢ % ‰ + − × ÷ = ± (Sansation)</div>
+
+        <h3 class="chart-heading" style="margin-top: 1.5rem;">Punctuation & Delimiters</h3>
+        <div class="chart-row">! ? . , : ; &hellip; ' &ldquo; &rdquo; &lsquo; &rsquo; &laquo; &raquo; - / \ ( ) [ ] { } @ &amp; * # ^ _ ~ |</div>
+
+        <h3 class="chart-heading" style="margin-top: 1.5rem;">German & Accented European Glyphs</h3>
+        <div class="chart-row">&Auml; &Ouml; &Uuml; &auml; &ouml; &uuml; &szlig; &#x1E9E; &Eacute; &Egrave; &Ecirc; &Euml; &Agrave; &Acirc; &Ccedil; &Ntilde; &Aring; &Oslash; &AElig; &oelig;</div>
+      </div>
+    </section>
+
+    <section aria-labelledby="heading-weights">
+      <h2 id="heading-weights" class="section-title">
+        Multi-Weight Reading & Rhythm Evaluation
+      </h2>
+      <p class="section-desc">
+        Evaluating paragraph texture, headline impact, and kerning harmony across Light (300), Regular (400),
+        and Bold (700) weights in Lygon.
+      </p>
+      <div class="weight-grid">
+        <div class="weight-card">
+          <div class="weight-label"><span>Light (300)</span><span>Display & Editorial</span></div>
+          <h3 class="sample-headline" style="font-weight: 300;">Architectural Elegance with Geometric Precision</h3>
+          <p class="sample-body" style="font-weight: 300;">
+            The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs.
+            Sphynx of black quartz, judge my vow. Bright vixens jump; dozy fowl quack.
+            Franz jagt im komplett verwahrlosten Taxi quer durch Bayern.
+          </p>
+        </div>
+        <div class="weight-card">
+          <div class="weight-label"><span>Regular (400)</span><span>Body & Primary UI</span></div>
+          <h3 class="sample-headline" style="font-weight: 400;">Balanced Counters and Harmonized Cutouts</h3>
+          <p class="sample-body" style="font-weight: 400;">
+            The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs.
+            Sphynx of black quartz, judge my vow. Bright vixens jump; dozy fowl quack.
+            Franz jagt im komplett verwahrlosten Taxi quer durch Bayern.
+          </p>
+        </div>
+        <div class="weight-card">
+          <div class="weight-label"><span>Bold (700)</span><span>Headlines & Emphasis</span></div>
+          <h3 class="sample-headline" style="font-weight: 700;">Powerful Impact with Uniform Stroke Geometry</h3>
+          <p class="sample-body" style="font-weight: 700;">
+            The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs.
+            Sphynx of black quartz, judge my vow. Bright vixens jump; dozy fowl quack.
+            Franz jagt im komplett verwahrlosten Taxi quer durch Bayern.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="heading-observations">
+      <h2 id="heading-observations" class="section-title">
+        Typographic Anatomy & Design Observations
+      </h2>
+      <p class="section-desc">
+        A detailed breakdown of key glyphs across the typeface, documenting their design characteristics,
+        modifications made in Lygon, and points for visual assessment.
+      </p>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Glyph</th>
+              <th scope="col">Orig</th>
+              <th scope="col">Letter</th>
+              <th scope="col">Category</th>
+              <th scope="col">Design Characteristics & Observations</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="glyph-cell">A</td>
+              <td class="glyph-orig">A</td>
+              <td><strong>A</strong></td>
+              <td>Benchmark</td>
+              <td>Asymmetric left cutout with ~95u to 110u gap. Serves as the golden ratio anchor for all other cutout reductions.</td>
+            </tr>
+            <tr>
+              <td class="glyph-cell">B</td>
+              <td class="glyph-orig">B</td>
+              <td><strong>B</strong></td>
+              <td>Normalized</td>
+              <td>Cutout reduced from 218u to 105u. Preserves full circular outer bowl curves without distortion.</td>
+            </tr>
+            <tr>
+              <td class="glyph-cell">K</td>
+              <td class="glyph-orig">K</td>
+              <td><strong>K</strong></td>
+              <td>Normalized</td>
+              <td>Cutout reduced to ~90u. Inner and outer diagonal junctions shifted equally, ensuring constant 182u stroke width with zero wedges.</td>
+            </tr>
+            <tr>
+              <td class="glyph-cell">P</td>
+              <td class="glyph-orig">P</td>
+              <td><strong>P</strong></td>
+              <td>Normalized</td>
+              <td>Bowl termination cutout reduced from 205u to 100u, bringing it into harmonic balance with A and B.</td>
+            </tr>
+            <tr>
+              <td class="glyph-cell">R</td>
+              <td class="glyph-orig">R</td>
+              <td><strong>R</strong></td>
+              <td>Normalized</td>
+              <td>Diagonal leg junction moved closer to stem (~100u gap); entire leg retains constant 182u stroke thickness from top to bottom.</td>
+            </tr>
+            <tr>
+              <td class="glyph-cell">j</td>
+              <td class="glyph-orig">j</td>
+              <td><strong>j</strong></td>
+              <td>Refined</td>
+              <td>Descender apex and tip extended leftward by 80 units based on user vector edit (j_modified.svg), providing a balanced round sweep.</td>
+            </tr>
+            <tr>
+              <td class="glyph-cell">k</td>
+              <td class="glyph-orig">k</td>
+              <td><strong>k</strong></td>
+              <td>Redesigned</td>
+              <td>Replaces original looped arch with modern straight diagonal arms matching capital K. Original loop preserved in stylistic set ss02.</td>
+            </tr>
+            <tr>
+              <td class="glyph-cell">g</td>
+              <td class="glyph-orig">g</td>
+              <td><strong>g</strong></td>
+              <td>Harmonized</td>
+              <td>Two-story open loop. Added point (797, 20) to Bold master, fixing the variable font weight drop across intermediate instances.</td>
+            </tr>
+            <tr>
+              <td class="glyph-cell">i</td>
+              <td class="glyph-orig">i</td>
+              <td><strong>i</strong></td>
+              <td>Harmonized</td>
+              <td>Harmonized contour hierarchy across Light, Regular, and Bold masters, eliminating the inverted exclamation mark bug in variable interpolation.</td>
+            </tr>
+            <tr>
+              <td class="glyph-cell">t</td>
+              <td class="glyph-orig">t</td>
+              <td><strong>t</strong></td>
+              <td>Original</td>
+              <td>Asymmetrical crossbar at x-height with gentle upward sweep at baseline. Consistent across family.</td>
+            </tr>
+            <tr>
+              <td class="glyph-cell">y</td>
+              <td class="glyph-orig">y</td>
+              <td><strong>y</strong></td>
+              <td>Original</td>
+              <td>Straight diagonal descender terminating with an angled cut at -380u below baseline. Clean and legible.</td>
+            </tr>
+            <tr>
+              <td class="glyph-cell">4</td>
+              <td class="glyph-orig">4</td>
+              <td><strong>4</strong></td>
+              <td>Original</td>
+              <td>Distinctive open top-left vertex. Clean geometric numerals with open counters.</td>
+            </tr>
+            <tr>
+              <td class="glyph-cell">Q</td>
+              <td class="glyph-orig">Q</td>
+              <td><strong>Q</strong></td>
+              <td>Original</td>
+              <td>Straight horizontal-diagonal tail cutting outward from the lower right of circular counter.</td>
+            </tr>
+            <tr>
+              <td class="glyph-cell">€</td>
+              <td class="glyph-orig">€</td>
+              <td><strong>€</strong></td>
+              <td>Redesigned</td>
+              <td>Crossbars now cut all the way through the back curve to the left, eliminating visual confusion with mathematical set membership symbols.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer style="text-align: center; padding: 2rem 0; color: #64748b; font-size: 0.85rem; border-top: 1px solid var(--border);">
+      Lygon Typeface Project. Derived from Sansation by Bernd Montag (SIL Open Font License 1.1).
+    </footer>
+  </div>
+</body>
+</html>
